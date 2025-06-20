@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: exp-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: exp_game_db
+      MYSQL_USER: gameuser
+      MYSQL_PASSWORD: gamepass
+      # เพิ่ม privilege สูงสุด
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+      MYSQL_HOST_AUTH_SOCKET: "mariadb"
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command:
+      --bind-address=0.0.0.0
+      --sql-mode=""
+      --skip-name-resolve
+    restart: always
+
+volumes:
+  mariadb_data:
